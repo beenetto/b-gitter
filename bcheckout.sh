@@ -1,5 +1,9 @@
-pwd
-REPOS=`find ./projects/ -type d -name '.git' -print | sed 's/.git//g'`
+ROOT="."
+if [[ -n "${2/[ ]*\n/}" ]]; then
+    ROOT="$2"
+fi
+
+REPOS=`find $ROOT -type d -name '.git' -print | sed 's/.git//g'`
 while read -r repo; do
     BRANCHES=`git -C $repo branch | grep $1`
     if (( `echo "${BRANCHES}" | wc -l` > 1 )); then
