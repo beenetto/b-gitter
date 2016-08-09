@@ -1,4 +1,5 @@
-REPOS=`find ../ -type d -name '.git' -print | sed 's/.git//g'`
+pwd
+REPOS=`find ./projects/ -type d -name '.git' -print | sed 's/.git//g'`
 while read -r repo; do
     BRANCHES=`git -C $repo branch | grep $1`
     if (( `echo "${BRANCHES}" | wc -l` > 1 )); then
