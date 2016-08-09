@@ -18,16 +18,16 @@ while read -r repo; do
         read input </dev/tty
         selectedbranch="${arr["$((input - 1))"]}"
 
-        STASH=`git -C $repo stash`
-        OPR=`git -C $repo checkout $selectedbranch`
+        STASH=`git -C $repo stash save "Changes stashed by bcheckout"`
+        CHECKOUT=`git -C $repo checkout $selectedbranch`
 
     elif [[ -n "${BRANCHES/[ ]*\n/}" ]]; then
         # SINGLE BRANCH IN REPO
-        STASH=`git -C $repo stash`
-        OPR=`git -C $repo checkout $BRANCHES`
+        STASH=`git -C $repo stash "Changes stashed by bcheckout"`
+        CHECKOUT=`git -C $repo checkout $BRANCHES`
     else
         # NO BRANCH FOUND
-        STASH=`git -C $repo stash`
-        OPR=`git -C $repo checkout develop`
+        STASH=`git -C $repo stash "Changes stashed by bcheckout"`
+        CHECKOUT=`git -C $repo checkout develop`
     fi
 done <<< "$REPOS"
