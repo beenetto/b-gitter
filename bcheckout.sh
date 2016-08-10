@@ -5,9 +5,10 @@ fi
 
 REPOS=`find $ROOT -type d -name '.git' -print | sed 's/.git//g'`
 while read -r repo; do
+    echo "=== ${repo} ==="
     BRANCHES=`git -C $repo branch | grep $1`
     if (( `echo "${BRANCHES}" | wc -l` > 1 )); then
-        # MULTIPLE BRANCHES IN REPO
+        echo "MULTIPLE BRANCHES IN REPO"
         echo "Multiple branches found @repo(${repo}) Make your selection:"
         arr=()
         while read -r branch; do
@@ -16,18 +17,24 @@ while read -r repo; do
         done <<< "$BRANCHES"
 
         read input </dev/tty
-        selectedbranch="${arr["$((input - 1))"]}"
+        selectedbranch="${arr["$((input - 1))"]//[ *]/}"
 
         STASH=`git -C $repo stash save "Changes stashed by bcheckout"`
         CHECKOUT=`git -C $repo checkout $selectedbranch`
 
     elif [[ -n "${BRANCHES/[ ]*\n/}" ]]; then
-        # SINGLE BRANCH IN REPO
+        echo "SINGLE BRANCH IN REPO ${BRANCHES//[ *]/}"
+
         STASH=`git -C $repo stash "Changes stashed by bcheckout"`
-        CHECKOUT=`git -C $repo checkout $BRANCHES`
+        CHECKOUT=`git -C $repo checkout ${BRANCHES//[ *]/}`
     else
-        # NO BRANCH FOUND
-        STASH=`git -C $repo stash "Changes stashed by bcheckout"`
-        CHECKOUT=`git -C $repo checkout develop`
+        echo "NO BRANCH FOUND"
+        DEVELOP=`git -C $repo branch | grep "develop"`
+
+        if [[ -n "${DEVELOP/[ ]*\n/}" ]]; then
+            STASH=`git -C $repo stash "Changes stashed by bcheckout"`
+            CHECKOUT=`git -C $repo checkout ${DEVELOP//[ *]/}`
+        fi
     fi
+    echo ""
 done <<< "$REPOS"
