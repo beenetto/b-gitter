@@ -1,16 +1,12 @@
-#!/usr/bin/env bash
+# pull options
+PULLALL=false
+PULLASK=false
+PULLSKIP=false
 
-# NOTICE: Uncomment if your script depends on bashisms.
-#if [ -z "$BASH_VERSION" ]; then bash $0 $@ ; exit $? ; fi
+# stash options
+STASHSKIP=false
+STASHASK=false
 
-echo "Before"
-for i ; do echo - $i ; done
-
-
-# Code template for parsing command line parameters using only portable shell
-# code, while handling both long and short params, handling '-f file' and
-# '-f=file' style param data and also capturing non-parameters to be inserted
-# back into the shell positional parameters.
 
 while [ -n "$1" ]; do
         # Copy so we can modify it (can't modify $1)
@@ -27,20 +23,29 @@ while [ -n "$1" ]; do
         while [ x"$OPT" != x"-" ] ; do
                 case "$OPT" in
                         # Handle --flag=value opts like this
-                        -c=* | --config=* )
-                                CONFIGFILE="${OPT#*=}"
+                        -rd=* | --rootdir=* )
+                                ROOTDIR="${OPT#*=}"
                                 shift
                                 ;;
                         # and --flag value opts like this
-                        -c* | --config )
-                                CONFIGFILE="$2"
+                        -rd* | --rootdir )
+                                ROOTDIR="$2"
                                 shift
                                 ;;
-                        -f* | --force )
-                                FORCE=true
+                        -pall* | --pullall )
+                                PULLALL=true
                                 ;;
-                        -r* | --retry )
-                                RETRY=true
+                        -pask* | --pullask )
+                                PULLASK=true
+                                ;;
+                        -pskip* | --pullskip )
+                                PULLALL=true
+                                ;;
+                        -sskip* | --stashskip )
+                                STASHSKIP=true
+                                ;;
+                        -sask* | --stashask )
+                                STASHASK=true
                                 ;;
                         # Anything unknown is recorded for later
                         * )
@@ -63,6 +68,16 @@ done
 # Set the non-parameters back into the positional parameters ($1 $2 ..)
 eval set -- $REMAINS
 
+if [[ -n "${1/[ ]*\n/}" ]]; then
+    SEARCHBRANCH="$1"
+else
+    echo >&2 "ERROR: You need to specify a search therm for the branch name."
+    echo "...exiting"
+    exit
+fi
 
-echo -e "After: \n configfile='$CONFIGFILE' \n force='$FORCE' \n retry='$RETRY' \n remains='$REMAINS'"
-for i ; do echo - $i ; done
+if [[ -z "${ROOTDIR}" ]]; then
+    echo >&2 "ERROR: No root directory specified. Use -rd or --rootdir"
+    echo "...exiting"
+    exit
+fi

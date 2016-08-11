@@ -1,12 +1,12 @@
-ROOT="."
-if [[ -n "${2/[ ]*\n/}" ]]; then
-    ROOT="$2"
-fi
+source ./options.sh
 
-REPOS=`find $ROOT -type d -name '.git' -print | sed 's/.git//g'`
+echo "${ROOTDIR}"
+echo "${SEARCHBRANCH}"
+
+REPOS=`find $ROOTDIR -type d -name '.git' -print | sed 's/.git//g'`
 while read -r repo; do
     echo "=== ${repo} ==="
-    BRANCHES=`git -C $repo branch | grep $1`
+    BRANCHES=`git -C $repo branch | grep $SEARCHBRANCH`
     if (( `echo "${BRANCHES}" | wc -l` > 1 )); then
         echo "MULTIPLE BRANCHES IN REPO"
         echo "Multiple branches found @repo(${repo}) Make your selection:"
