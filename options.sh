@@ -1,7 +1,5 @@
 # pull options
-PULLALL=false
 PULLASK=false
-PULLSKIP=false
 
 # stash options
 STASHSKIP=false
@@ -34,12 +32,6 @@ while [ -n "$1" ]; do
                                 ;;
                         -pall* | --pullall )
                                 PULLALL=true
-                                ;;
-                        -pask* | --pullask )
-                                PULLASK=true
-                                ;;
-                        -pskip* | --pullskip )
-                                PULLSKIP=true
                                 ;;
                         -sskip* | --stashskip )
                                 STASHSKIP=true

@@ -33,29 +33,32 @@ stash () {
 
 checkout () {
 
-    if [ "${PULLSKIP}" = false ]
-    then
-        if [ "${PULLASK}" = true ]
-        then
-            echo "Do you want to pull develop? (y/n)"
-
-            read input </dev/tty
-
-            if [ "$input" = "n" ]; then
-                # return 1
-                :
-            elif [ "$input" = "y" ]; then
-                :
-            else
-                echo >&2 "WARNING: Bad option, not pulling."
-                # return 1
-                :
-            fi
-        fi
-    fi
-
     CHECKOUT=`git -C "${1}" checkout ${2}`
     echo "${CHECKOUT}"
+
+    if [ "${PULLASK}" = true ]
+    then
+        echo "Do you want to pull 'develop'? (y/n)"
+        echo "Use (branch) to specify an other branch thaan 'develop'"
+
+        read input </dev/tty
+
+        if [ "$input" = "n" ]; then
+            return 1
+            :
+        elif [ "$input" = "y" ]; then
+            :
+        elif [ "$input" = "branch" ]; then
+            read inputbranch </dev/tty
+            if [[ -n "${inputbranch/[ ]*\n/}" ]]; then
+                echo "${inputbranch}"
+            fi
+        else
+            echo >&2 "WARNING: Bad option, not pulling."
+            # return 1
+            :
+        fi
+    fi
 }
 
 
