@@ -31,6 +31,33 @@ stash () {
     fi
 }
 
+checkout () {
+
+    if [ "${PULLSKIP}" = false ]
+    then
+        if [ "${PULLASK}" = true ]
+        then
+            echo "Do you want to pull develop? (y/n)"
+
+            read input </dev/tty
+
+            if [ "$input" = "n" ]; then
+                # return 1
+                :
+            elif [ "$input" = "y" ]; then
+                :
+            else
+                echo >&2 "WARNING: Bad option, not pulling."
+                # return 1
+                :
+            fi
+        fi
+    fi
+
+    CHECKOUT=`git -C "${1}" checkout ${2}`
+    echo "${CHECKOUT}"
+}
+
 
 REPOS=`find $ROOTDIR -type d -name '.git' -print | sed 's/.git//g'`
 while read -r repo; do
@@ -48,13 +75,13 @@ while read -r repo; do
         selectedbranch="${arr["$((input - 1))"]//[ *]/}"
 
         stash $repo
-        # CHECKOUT=`git -C $repo checkout $selectedbranch`
+        checkout $repo $selectedbranch
 
     elif [[ -n "${BRANCHES/[ ]*\n/}" ]]; then
         echo "SINGLE BRANCH IN REPO ${BRANCHES//[ *]/}"
 
         stash $repo
-        # CHECKOUT=`git -C $repo checkout ${BRANCHES//[ *]/}`
+        checkout $repo ${BRANCHES//[ *]/}
     else
         echo "NO BRANCH FOUND"
         DEVELOP=`git -C $repo branch | grep "develop"`
@@ -62,7 +89,7 @@ while read -r repo; do
         if [[ -n "${DEVELOP/[ ]*\n/}" ]]; then
 
             stash $repo
-            # CHECKOUT=`git -C $repo checkout ${DEVELOP//[ *]/}`
+            checkout $repo ${DEVELOP//[ *]/}
         fi
     fi
     echo ""
