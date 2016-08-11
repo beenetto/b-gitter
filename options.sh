@@ -39,7 +39,7 @@ while [ -n "$1" ]; do
                                 PULLASK=true
                                 ;;
                         -pskip* | --pullskip )
-                                PULLALL=true
+                                PULLSKIP=true
                                 ;;
                         -sskip* | --stashskip )
                                 STASHSKIP=true
