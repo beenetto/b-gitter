@@ -1,4 +1,4 @@
-source ./options.sh
+#!/bin/bash
 
 PULLBRANCH="develop"
 DEFAULTBRANCH="develop"
@@ -13,10 +13,8 @@ stash () {
 
         if [ "${STASHASK}" = true ]
         then
-            echo "Do you want to stash your changes? (y/n)"
-
+            echo "Do you want to stash your changes? [y, n]"
             read input </dev/tty
-
             if [ "$input" = "n" ]; then
                 return 1
             elif [ "$input" = "y" ]; then
@@ -38,24 +36,28 @@ checkout () {
 
     if [ "${PULLASK}" = true ]
     then
-        echo "Do you want to pull 'develop'? (y/n)"
-        echo "Use (branch) to specify an other branch thaan 'develop'"
+        echo "Do you want to pull '$PULLBRANCH'? [y, n, b]"
 
         read input </dev/tty
 
         if [ "$input" = "n" ]; then
             return 1
-            :
+
         elif [ "$input" = "y" ]; then
-            :
-        elif [ "$input" = "branch" ]; then
+
+            PULL=`git -C "${1}" pull origin develop`
+            echo "${CHECKOUT}"
+
+        elif [ "$input" = "b" ]; then
             read inputbranch </dev/tty
             if [[ -n "${inputbranch/[ ]*\n/}" ]]; then
-                echo "${inputbranch}"
+
+                PULL=`git -C "${1}" pull origin develop`
+                echo "${PULL}"
+
             fi
         else
             echo >&2 "WARNING: Bad option, not pulling."
-            # return 1
             :
         fi
     fi
@@ -86,9 +88,7 @@ while read -r repo; do
         stash $repo
         checkout $repo ${BRANCHES//[ *]/}
     else
-        echo "NO BRANCH FOUND"
-        DEVELOP=`git -C $repo branch | grep "develop"`
-
+        DEVELOP=`git -C $repo branch | grep "${DEFAULTBRANCH}"`
         if [[ -n "${DEVELOP/[ ]*\n/}" ]]; then
 
             stash $repo

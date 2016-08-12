@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # pull options
 PULLASK=false
 
@@ -32,6 +34,9 @@ while [ -n "$1" ]; do
                                 ;;
                         -pall* | --pullall )
                                 PULLALL=true
+                                ;;
+                        -pask* | --pullask )
+                                PULLASK=true
                                 ;;
                         -sskip* | --stashskip )
                                 STASHSKIP=true
