@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PULLBRANCH="develop"
+PULLBRANCH="develop" # default refresh branch
 DEFAULTBRANCH="develop"
 
 
