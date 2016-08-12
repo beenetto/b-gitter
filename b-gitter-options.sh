@@ -65,14 +65,7 @@ done
 # Set the non-parameters back into the positional parameters ($1 $2 ..)
 eval set -- $REMAINS
 
-if [[ -n "${1/[ ]*\n/}" ]]; then
-    SEARCHBRANCH="$1"
-else
-    echo >&2 "ERROR: You need to specify a search therm for the branch name."
-    echo "...exiting"
-    exit
-fi
-
+# Root directory is required
 if [[ -z "${ROOTDIR}" ]]; then
     echo >&2 "ERROR: No root directory specified. Use -rd or --rootdir"
     echo "...exiting"

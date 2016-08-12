@@ -63,8 +63,6 @@ checkout () {
     fi
 }
 
-
-REPOS=`find $ROOTDIR -type d -name '.git' -print | sed 's/.git//g'`
 while read -r repo; do
     echo "=== ${repo} ==="
     BRANCHES=`git -C $repo branch | grep $SEARCHBRANCH`
