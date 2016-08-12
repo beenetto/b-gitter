@@ -6,6 +6,8 @@ Note: This project is still in an early phase so not all the features are implem
 Usage:
   ```bash
   export PATH="$PATH:/path/to/b-gitter"
+  cd /path/to/b-gitter
+  chmod u+x
   ```
 
   Simple use case:
