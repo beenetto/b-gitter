@@ -7,7 +7,7 @@ Usage:
   ```bash
   export PATH="$PATH:/path/to/b-gitter"
   cd /path/to/b-gitter
-  chmod u+x
+  chmod u+x b-gitter.sh
   ```
 
   Simple use case:
