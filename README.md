@@ -3,6 +3,16 @@ A tool for working on multiple repos. Let's say you are working on a project whi
 
 Note: This project is still in an early phase so not all the features are implemented as intended.
 
+Options:
+
+```-rd, --rootdir``` the path to the directory which should be scanned for git repos.
+
+```-pask, --pullask``` this option will walk you through all repos and pull a fresh develop into the specified branch after it is checked out.
+
+```-sskip, --stashskip``` this option turns of auto stashing.
+
+```-sask, --stashask``` this option will walk you though all repos and ask you if you want to stash the changes on your current branch.
+
 Usage:
   ```bash
   export PATH="$PATH:/path/to/b-gitter"
