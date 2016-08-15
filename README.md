@@ -7,23 +7,23 @@ Usage:
   ```bash
   export PATH="$PATH:/path/to/b-gitter"
   cd /path/to/b-gitter
-  chmod u+x b-gitter.sh
+  chmod u+x b-gitter
   ```
 
   Simple use case:
 
   ```bash
-  b-gitter.sh BRANCH-123 -rd ~/projects
+  b-gitter BRANCH-123 -rd ~/projects
   ```
 
   With stash ask (```-sask or --stashask```) it will ask you to confirm if you want to stash:
 
   ```bash
-  b-gitter.sh BRANCH-123 -rd ~/projects -sask
+  b-gitter BRANCH-123 -rd ~/projects -sask
   ```
 
   With pull ask (```-pask or --pullask```) it will ask you to confirm if you want to refresh your branches the third option ```b``` will let you specify a different branch name other than ```develop``` :
 
   ```bash
-  b-gitter.sh BRANCH-123 -rd ~/projects -pask
+  b-gitter BRANCH-123 -rd ~/projects -pask
   ```
