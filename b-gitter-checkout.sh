@@ -3,6 +3,10 @@
 PULLBRANCH="develop" # default refresh branch
 DEFAULTBRANCH="develop"
 
+status () {
+    ST=`git -C ${1} status`
+    echo "${ST}"
+}
 
 stash () {
 
@@ -66,15 +70,22 @@ checkout () {
 
 REPOS=`find $ROOTDIR -type d -name '.git' -print | sed 's/.git//g'`
 while read -r repo; do
-    echo "=== ${repo} ==="
-    BRANCHES=`git -C $repo branch | grep $SEARCHBRANCH`
-    if (( `echo "${BRANCHES}" | wc -l` > 1 )); then
+    echo ""
+    echo -e "=== \033[1m${repo}\033[0m ==="
+    BRANCH=`git -C $repo branch | grep $SEARCHBRANCH`
+
+    if [ "${STATUS}" = true ]; then
+        status $repo
+        continue
+    fi
+
+    if (( `echo "${BRANCH}" | wc -l` > 1 )); then
         echo "Multiple branches found @repo(${repo}) Make your selection:"
         arr=()
         while read -r branch; do
            arr+=("$branch")
            echo "${#arr[@]}) ${branch}"
-        done <<< "$BRANCHES"
+        done <<< "$BRANCH"
 
         read input </dev/tty
         selectedbranch="${arr["$((input - 1))"]//[ *]/}"
@@ -82,11 +93,11 @@ while read -r repo; do
         stash $repo
         checkout $repo $selectedbranch
 
-    elif [[ -n "${BRANCHES/[ ]*\n/}" ]]; then
-        echo "SINGLE BRANCH IN REPO ${BRANCHES//[ *]/}"
+    elif [[ -n "${BRANCH/[ ]*\n/}" ]]; then
+        echo "SINGLE BRANCH IN REPO ${BRANCH//[ *]/}"
 
         stash $repo
-        checkout $repo ${BRANCHES//[ *]/}
+        checkout $repo ${BRANCH//[ *]/}
     else
         DEVELOP=`git -C $repo branch | grep "${DEFAULTBRANCH}"`
         if [[ -n "${DEVELOP/[ ]*\n/}" ]]; then

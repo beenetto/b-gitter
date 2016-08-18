@@ -6,6 +6,7 @@ PULLASK=false
 # stash options
 STASHSKIP=false
 STASHASK=false
+STATUS=false
 
 
 while [ -n "$1" ]; do
@@ -44,6 +45,9 @@ while [ -n "$1" ]; do
                         -sask* | --stashask )
                                 STASHASK=true
                                 ;;
+                        -st* | --status )
+                                STATUS=true
+                                ;;
                         # Anything unknown is recorded for later
                         * )
                                 REMAINS="$REMAINS \"$OPT\""
@@ -65,8 +69,14 @@ done
 # Set the non-parameters back into the positional parameters ($1 $2 ..)
 eval set -- $REMAINS
 
-if [[ -n "${1/[ ]*\n/}" ]]; then
+if [[ -n "${1/[ ]*\n/}" ]] && [ "${STATUS}" = false ]; then
+
     SEARCHBRANCH="$1"
+
+elif [ "${STATUS}" = true ]; then
+
+    SEARCHBRANCH='\"*\"'
+
 else
     echo >&2 "ERROR: You need to specify a search therm for the branch name."
     echo "...exiting"
