@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# pull options
-PULLASK=false
-
-# stash options
-STASHSKIP=false
-STASHASK=false
-STATUS=false
-
 
 while [ -n "$1" ]; do
         # Copy so we can modify it (can't modify $1)
