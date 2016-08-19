@@ -3,6 +3,20 @@
 PULLBRANCH="develop" # default refresh branch
 DEFAULTBRANCH="develop"
 
+create () {
+    echo -e "Do you want to create new branch: \033[1m\"${NEWBRANCH}\"\033[0m @repo(${repo}) \033[1m[y, n]\033[0m?"
+    read input </dev/tty
+    if [ "$input" = "n" ]; then
+        return 1
+    elif [ "$input" = "y" ]; then
+        CREATE=`git -C ${1} checkout -b ${2}`
+        echo "${CREATE}"
+    else
+        echo >&2 "WARNING: Bad option, not stashing."
+        return 1
+    fi
+}
+
 status () {
     ST=`git -C ${1} status`
     echo "${ST}"
@@ -17,7 +31,7 @@ stash () {
 
         if [ "${STASHASK}" = true ]
         then
-            echo "Do you want to stash your changes? [y, n]"
+            echo -e "Do you want to stash your changes? \033[1m[y, n]\033[0m"
             read input </dev/tty
             if [ "$input" = "n" ]; then
                 return 1
@@ -40,7 +54,7 @@ checkout () {
 
     if [ "${PULLASK}" = true ]
     then
-        echo "Do you want to pull '$PULLBRANCH'? [y, n, b]"
+        echo -e "Do you want to pull '$PULLBRANCH'? \033[1m[y, n, b]\033[0m"
 
         read input </dev/tty
 
@@ -72,8 +86,13 @@ REPOS=`find $ROOTDIR -type d -name '.git' -print | sed 's/.git//g'`
 while read -r repo; do
     echo ""
     echo -e "=== \033[1m${repo}\033[0m ==="
-    BRANCH=`git -C $repo branch | grep $SEARCHBRANCH`
 
+    if [ "${CREATE}" = true ]; then
+        create $repo $NEWBRANCH
+        continue
+    fi
+
+    BRANCH=`git -C $repo branch | grep $SEARCHBRANCH`
     if [ "${STATUS}" = true ]; then
         status $repo
         continue

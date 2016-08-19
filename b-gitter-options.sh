@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 while [ -n "$1" ]; do
         # Copy so we can modify it (can't modify $1)
         OPT="$1"
@@ -25,6 +24,14 @@ while [ -n "$1" ]; do
                                 ROOTDIR="$2"
                                 shift
                                 ;;
+                        -getr=* | --getremote=* )
+                                GETREMOTE="${OPT#*=}"
+                                shift
+                                ;;
+                        -getr* | --getremote )
+                                GETREMOTE="$2"
+                                shift
+                                ;;
                         -pall* | --pullall )
                                 PULLALL=true
                                 ;;
@@ -39,6 +46,9 @@ while [ -n "$1" ]; do
                                 ;;
                         -st* | --status )
                                 STATUS=true
+                                ;;
+                        -cr* | --create )
+                                CREATE=true
                                 ;;
                         # Anything unknown is recorded for later
                         * )
@@ -61,13 +71,17 @@ done
 # Set the non-parameters back into the positional parameters ($1 $2 ..)
 eval set -- $REMAINS
 
-if [[ -n "${1/[ ]*\n/}" ]] && [ "${STATUS}" = false ]; then
+if [[ -n "${1/[ ]*\n/}" ]] && [ "${STATUS}" = false ] && [ "${CREATE}" = false ]; then
 
     SEARCHBRANCH="$1"
 
-elif [ "${STATUS}" = true ]; then
+elif [ "${STATUS}" = true ] && [ "${CREATE}" = false ]; then
 
     SEARCHBRANCH='\"*\"'
+
+elif [ "${CREATE}" = true ] && [ "${STATUS}" = false ]; then
+
+    NEWBRANCH="$1"
 
 else
     echo >&2 "ERROR: You need to specify a search therm for the branch name."
