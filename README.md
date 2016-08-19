@@ -20,8 +20,27 @@ Usage:
   chmod u+x b-gitter
   ```
 
-  Simple use case:
+  Simple use cases:
 
+  Get the status of your current branch in all repos:
+  ```bash
+  b-gitter -st
+  ```
+  or
+  ```bash
+  b-gitter --status
+  ```
+
+  Create new branches in confirmed repos:
+  ```bash
+  b-gitter your_new_branch_name -cr
+  ```
+  or
+  ```bash
+  b-gitter your_new_branch_name --create
+  ```
+
+  Checking out branches in all repos:
   ```bash
   b-gitter BRANCH-123 -rd ~/projects
   ```
