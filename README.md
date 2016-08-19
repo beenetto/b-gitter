@@ -1,8 +1,6 @@
 # b-gitter
 A tool for working on multiple repos. Let's say you are working on a project which have several repos and these repos all have a branch name in common. For instance you adding a new feature but it requires changes in different repos so it would make sense to name the relevant branches the same. b-gitter can be handy to sync multiple repos. It will checkout the branches for you and stash any changes before. It can also refresh your branches by pulling in any updated remote branch.
 
-Note: This project is still in an early phase so not all the features are implemented as intended.
-
 Options:
 
 ```-rd, --rootdir``` the path to the directory which should be scanned for git repos.
