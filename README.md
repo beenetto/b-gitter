@@ -7,7 +7,7 @@ Options:
 
 ```-pask, --pullask``` this option will walk you through all repos and pull a fresh develop into the specified branch after it is checked out.
 
-```-sskip, --stashskip``` this option turns of auto stashing.
+```-sskip, --stashskip``` this option turns off auto stashing.
 
 ```-sask, --stashask``` this option will walk you though all repos and ask you if you want to stash the changes on your current branch.
 
